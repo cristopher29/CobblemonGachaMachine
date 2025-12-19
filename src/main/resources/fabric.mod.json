@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "cobble-gacha-machine",
+	"version": "${version}",
+	"name": "Cobble Gacha Machine",
+	"description": "Cobblemon Pokemon Gacha Machine",
+	"authors": [
+		"Cristoh"
+	],
+	"license": "CC0-1.0",
+	"icon": "assets/cobble-gacha-machine/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.cristoh.cobblegachamachine.CobbleGachaMachine"
+		],
+		"fabric-datagen": [
+			"com.cristoh.cobblegachamachine.CobbleGachaMachineDataGenerator"
+		],
+        "client": [
+          "com.cristoh.cobblegachamachine.CobbleGachaMachineClient"
+        ],
+        "server": [
+          "com.cristoh.cobblegachamachine.CobbleGachaMachineServer"
+        ]
+	},
+	"mixins": [
+		"cobble-gacha-machine.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.10",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+        "fabric-api": ">=0.116.6+1.21.1",
+        "cobblemon": ">=1.7.1+1.21.1"
+    }
+}

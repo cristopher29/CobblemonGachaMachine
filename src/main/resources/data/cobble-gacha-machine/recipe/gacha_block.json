@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "III",
+    "GPG",
+    "IDI"
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "G": { "item": "minecraft:glass" },
+    "P": { "tag": "cobblemon:poke_balls" },
+    "D": { "item": "minecraft:dispenser" }
+  },
+  "result": {
+    "id": "cobble-gacha-machine:gacha_block",
+    "count": 1
+  }
+}

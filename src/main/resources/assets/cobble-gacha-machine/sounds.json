@@ -1,0 +1,74 @@
+{
+  "gacha_running": {
+    "sounds": [
+      {
+        "name": "cobble-gacha-machine:gacha_running",
+        "stream": false
+      }
+    ]
+  },
+  "gacha_dial": {
+    "sounds": [
+      {
+        "name": "cobble-gacha-machine:gacha_dial",
+        "stream": false
+      }
+    ]
+  },
+  "gacha_dispense": {
+    "sounds": [
+      {
+        "name": "cobble-gacha-machine:gacha_dispense",
+        "stream": false
+      }
+    ]
+  },
+  "capsule_open": {
+    "sounds": [
+      {
+        "name": "cobble-gacha-machine:capsule_open",
+        "stream": false
+      }
+    ]
+  },
+  "insert_coin": {
+    "sounds": [
+      {
+        "name": "cobble-gacha-machine:insert_coin",
+        "stream": false
+      }
+    ]
+  },
+  "reward_normal": {
+    "sounds": [
+      {
+        "name": "cobble-gacha-machine:reward_normal",
+        "stream": false
+      }
+    ]
+  },
+  "reward_rare": {
+    "sounds": [
+      {
+        "name": "cobble-gacha-machine:reward_rare",
+        "stream": false
+      }
+    ]
+  },
+  "reward_ultra_rare": {
+    "sounds": [
+      {
+        "name": "cobble-gacha-machine:reward_ultra_rare",
+        "stream": false
+      }
+    ]
+  },
+  "reward_legendary": {
+    "sounds": [
+      {
+        "name": "cobble-gacha-machine:reward_legendary",
+        "stream": false
+      }
+    ]
+  }
+}
