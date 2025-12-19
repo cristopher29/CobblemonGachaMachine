@@ -22,6 +22,7 @@ import java.util.*;
 public class PokemonSelector {
 
     private static final HashMap<String, HashMap<Species, Float>> buckets = new HashMap<>();
+    private static final HashMap<String, List<Species>> labelCache = new HashMap<>();
     private static final HashMap<UUID, LinkedList<Species>> playerRecentPokemon = new HashMap<>();
     private static final int MAX_CONSECUTIVE = 2;
     private static final float NEW_POKEMON_WEIGHT_MULTIPLIER = 1.5f;
@@ -66,9 +67,27 @@ public class PokemonSelector {
             }
         }
 
+        initLabelCache();
+
         for(Map.Entry<String, HashMap<Species, Float>> bucket : buckets.entrySet()) {
             CobbleGachaMachine.LOGGER.info("Bucket: " + bucket.getKey() + " has " + bucket.getValue().size() + " pokemons");
         }
+    }
+
+    private static void initLabelCache() {
+        // Iterar todas las especies una sola vez
+        for (Species species : PokemonSpecies.getSpecies()) {
+            // Para cada label que tiene la especie, añadirla a ese grupo
+            for (String label : species.getLabels()) {
+                labelCache.computeIfAbsent(label, k -> new ArrayList<>()).add(species);
+            }
+        }
+
+        CobbleGachaMachine.LOGGER.info("Label cache initialized with " + labelCache.size() + " labels");
+        CobbleGachaMachine.LOGGER.info("Label legendary has " + labelCache.get("legendary").size() + " pokemons:");
+        labelCache.get("legendary").forEach(species -> CobbleGachaMachine.LOGGER.info(species.getName()));
+        CobbleGachaMachine.LOGGER.info("Label mythical has " + labelCache.get("mythical").size() + " pokemons:");
+        labelCache.get("mythical").forEach(species -> CobbleGachaMachine.LOGGER.info(species.getName()));
     }
 
     public static Pokemon selectPokemonByRarity(ServerWorld world, PlayerEntity player, CapsuleRarity rarity) {
@@ -143,13 +162,17 @@ public class PokemonSelector {
     }
 
     private static List<Map.Entry<Species, Float>> getSpeciesByLabel(CapsuleRarity rarity) {
-        return PokemonSpecies.getSpecies().stream()
-                .filter(species -> {
-                    for(String label : rarity.getAllowedBuckets()) {
-                        if(species.getLabels().contains(label)) return true;
-                    }
-                    return false;
-                })
+        // Usar un Set para evitar duplicados si un Pokémon tiene múltiples labels coincidentes
+        Set<Species> uniqueSpecies = new HashSet<>();
+
+        for (String label : rarity.getAllowedBuckets()) {
+            List<Species> speciesWithLabel = labelCache.get(label);
+            if (speciesWithLabel != null) {
+                uniqueSpecies.addAll(speciesWithLabel);
+            }
+        }
+
+        return uniqueSpecies.stream()
                 .map(species -> Map.entry(species, 1.0f))
                 .toList();
     }
