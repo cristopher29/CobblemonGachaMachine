@@ -41,7 +41,7 @@ public class PokemonSelector {
                 String pokemonSpeciesName = ((PokemonSpawnDetail) spawnDetail).getPokemon().getSpecies();
                 if(pokemonSpeciesName == null) continue;
 
-                Species species = PokemonSpecies.INSTANCE.getByName(pokemonSpeciesName);
+                Species species = PokemonSpecies.getByName(pokemonSpeciesName);
                 if(species == null) continue;
 
                 if(species.getLabels().contains("legendary") || species.getLabels().contains("mythical")) {
@@ -101,7 +101,7 @@ public class PokemonSelector {
         return rarity.getCustomList().stream()
                 .map(entry -> {
                     try {
-                        Species species = PokemonSpecies.INSTANCE.getByName(entry.name);
+                        Species species = PokemonSpecies.getByName(entry.name);
                         if (species == null) {
                             CobbleGachaMachine.LOGGER.info(Text.translatable(
                                     "logger.cobble-gacha-machine.custom_list_pokemon_not_found",
@@ -143,7 +143,7 @@ public class PokemonSelector {
     }
 
     private static List<Map.Entry<Species, Float>> getSpeciesByLabel(CapsuleRarity rarity) {
-        return PokemonSpecies.INSTANCE.getSpecies().stream()
+        return PokemonSpecies.getSpecies().stream()
                 .filter(species -> {
                     for(String label : rarity.getAllowedBuckets()) {
                         if(species.getLabels().contains(label)) return true;
