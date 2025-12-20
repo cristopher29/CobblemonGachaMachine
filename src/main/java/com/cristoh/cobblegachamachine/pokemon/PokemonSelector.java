@@ -18,12 +18,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.random.Random;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PokemonSelector {
 
-    private static final HashMap<String, HashMap<Species, Float>> buckets = new HashMap<>();
-    private static final HashMap<String, List<Species>> labelCache = new HashMap<>();
-    private static final HashMap<UUID, LinkedList<Species>> playerRecentPokemon = new HashMap<>();
+    private static final ConcurrentHashMap<String, HashMap<Species, Float>> buckets = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, List<Species>> labelCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, LinkedList<Species>> playerRecentPokemon = new ConcurrentHashMap<>();
     private static final int MAX_CONSECUTIVE = 2;
     private static final float NEW_POKEMON_WEIGHT_MULTIPLIER = 1.5f;
 
