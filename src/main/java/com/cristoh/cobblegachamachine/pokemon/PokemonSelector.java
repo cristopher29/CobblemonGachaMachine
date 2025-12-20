@@ -18,12 +18,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.random.Random;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PokemonSelector {
 
-    private static final HashMap<String, HashMap<Species, Float>> buckets = new HashMap<>();
-    private static final HashMap<String, List<Species>> labelCache = new HashMap<>();
-    private static final HashMap<UUID, LinkedList<Species>> playerRecentPokemon = new HashMap<>();
+    private static final ConcurrentHashMap<String, HashMap<Species, Float>> buckets = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, List<Species>> labelCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, LinkedList<Species>> playerRecentPokemon = new ConcurrentHashMap<>();
     private static final int MAX_CONSECUTIVE = 2;
     private static final float NEW_POKEMON_WEIGHT_MULTIPLIER = 1.5f;
 
@@ -76,9 +77,8 @@ public class PokemonSelector {
     }
 
     private static void initLabelCache() {
-        // Iterar todas las especies una sola vez
         for (Species species : PokemonSpecies.INSTANCE.getSpecies()) {
-            // Para cada label que tiene la especie, añadirla a ese grupo
+            if(species.getName().equals("Type: Null")) continue;
             for (String label : species.getLabels()) {
                 labelCache.computeIfAbsent(label, k -> new ArrayList<>()).add(species);
             }
@@ -104,9 +104,18 @@ public class PokemonSelector {
             return null;
         }
 
+        //CobbleGachaMachine.LOGGER.info("Eligible species size: " + eligibleSpecies.size());
+        //CobbleGachaMachine.LOGGER.info("Eligible species names: ");
+        //eligibleSpecies.forEach(entry -> CobbleGachaMachine.LOGGER.info(entry.getKey().getName()));
+
         Species selectedSpecies = selectSpeciesWithWeights(eligibleSpecies, player, world.random, rarity.useCustomList());
+
+        //CobbleGachaMachine.LOGGER.info("Selected species: " + selectedSpecies.getName());
+
         int level = rarity.getMinLevel() + world.random.nextInt(rarity.getMaxLevel() - rarity.getMinLevel() + 1);
         Pokemon pokemon = selectedSpecies.create(level);
+
+        //CobbleGachaMachine.LOGGER.info("Pokemon created: " + pokemon.getSpecies().getName() + " - Level: " + pokemon.getLevel());
 
         int shinyChance = rarity.getShinyChance();
 
@@ -173,12 +182,19 @@ public class PokemonSelector {
             }
         }
 
+        //CobbleGachaMachine.LOGGER.info("Found " + uniqueSpecies.size() + " species with label(s) " + Arrays.toString(rarity.getAllowedBuckets()));
+        //CobbleGachaMachine.LOGGER.info("List of species:");
+        //uniqueSpecies.forEach(species -> CobbleGachaMachine.LOGGER.info(species.getName()));
+
         return uniqueSpecies.stream()
                 .map(species -> Map.entry(species, 1.0f))
                 .toList();
     }
 
     private static List<Map.Entry<Species, Float>> getSpeciesByCapsuleRarity(CapsuleRarity rarity) {
+
+        //CobbleGachaMachine.LOGGER.info("Getting species by rarity " + rarity.getName());
+
         var speciesByBucket = Arrays.stream(rarity.getAllowedBuckets())
                 .filter(buckets::containsKey)
                 .flatMap(bucket -> buckets.get(bucket).entrySet().stream())
@@ -187,6 +203,9 @@ public class PokemonSelector {
                     return weight >= rarity.getMinWeight() && weight <= rarity.getMaxWeight();
                 })
                 .toList();
+
+        //CobbleGachaMachine.LOGGER.info("Found " + speciesByBucket.size() + " species in bucket(s) " + Arrays.toString(rarity.getAllowedBuckets()));
+
         if (speciesByBucket.isEmpty()) return getSpeciesByLabel(rarity);
         return speciesByBucket;
     }
